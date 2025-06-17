@@ -1,0 +1,141 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 214, 219, 220;
+  --background-end-rgb: 255, 255, 255;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 0, 0, 0;
+    --background-end-rgb: 0, 0, 0;
+  }
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: linear-gradient(
+      to bottom,
+      transparent,
+      rgb(var(--background-end-rgb))
+    )
+    rgb(var(--background-start-rgb));
+}
+
+/* 🚀 時間帯背景色用のカスタム色定義 */
+.bg-orange-25 {
+  background-color: rgba(251, 146, 60, 0.05); /* Orange with 5% opacity */
+}
+
+.bg-yellow-25 {
+  background-color: rgba(251, 191, 36, 0.05); /* Yellow with 5% opacity */
+}
+
+.bg-green-25 {
+  background-color: rgba(34, 197, 94, 0.05); /* Green with 5% opacity */
+}
+
+.bg-pink-25 {
+  background-color: rgba(236, 72, 153, 0.05); /* Pink with 5% opacity */
+}
+
+.bg-purple-25 {
+  background-color: rgba(168, 85, 247, 0.05); /* Purple with 5% opacity */
+}
+
+.bg-blue-25 {
+  background-color: rgba(59, 130, 246, 0.05); /* Blue with 5% opacity */
+}
+
+/* 🚀 スケジュールブロック用のアニメーション */
+@keyframes touch-feedback {
+  0% { transform: scale(1); }
+  50% { transform: scale(0.98); }
+  100% { transform: scale(1); }
+}
+
+.animate-touch-feedback {
+  animation: touch-feedback 150ms ease-out;
+}
+
+/* 🚀 スムーズなトランジション */
+.transition-background {
+  transition: background-color 0.2s ease-in-out;
+}
+
+/* 🚀 ドラッグ時のカーソル */
+.cursor-grabbing {
+  cursor: grabbing;
+  cursor: -webkit-grabbing;
+}
+
+.cursor-grab {
+  cursor: grab;
+  cursor: -webkit-grab;
+}
+
+/* カスタムスタイル */
+.calendar-grid {
+  display: grid;
+  grid-template-columns: 60px repeat(7, 1fr);
+  grid-template-rows: auto repeat(36, 40px);
+  gap: 1px;
+  background-color: #e5e7eb;
+}
+
+.time-slot {
+  background-color: white;
+  border: 1px solid #e5e7eb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  color: #6b7280;
+}
+
+.day-header {
+  background-color: #f3f4f6;
+  border: 1px solid #e5e7eb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  color: #374151;
+}
+
+.schedule-item {
+  background-color: #dbeafe;
+  border: 1px solid #3b82f6;
+  border-radius: 4px;
+  padding: 2px 4px;
+  font-size: 0.75rem;
+  color: #1e40af;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.schedule-item:hover {
+  background-color: #bfdbfe;
+  cursor: pointer;
+}
+
+.ai-chat-bubble {
+  max-width: 70%;
+  word-wrap: break-word;
+}
+
+.ai-chat-bubble.user {
+  background-color: #3b82f6;
+  color: white;
+  margin-left: auto;
+}
+
+.ai-chat-bubble.ai {
+  background-color: #f3f4f6;
+  color: #374151;
+} 

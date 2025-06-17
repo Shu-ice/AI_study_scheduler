@@ -1,0 +1,116 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+// ユーザーモデル
+model User {
+  id          String   @id @default(cuid())
+  email       String   @unique
+  name        String
+  preferences String?  // UserPreferences型のJSONを文字列として保存
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // リレーション
+  schedules     Schedule[]
+  tasks         Task[]
+  actualRecords ActualRecord[]
+  categories    ScheduleCategory[]
+
+  @@map("users")
+}
+
+// スケジュールカテゴリモデル
+model ScheduleCategory {
+  id     String  @id @default(cuid())
+  userId String
+  name   String
+  color  String
+  icon   String?
+
+  // リレーション
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  schedules Schedule[]
+  tasks     Task[]
+
+  @@unique([userId, name])
+  @@map("schedule_categories")
+}
+
+// スケジュールモデル
+model Schedule {
+  id            String    @id @default(cuid())
+  userId        String
+  title         String
+  startTime     String    // HH:mm format
+  endTime       String    // HH:mm format
+  date          DateTime
+  categoryId    String
+  isFixed       Boolean   @default(true)
+  repeatPattern String?   // RepeatPattern型のJSONを文字列として保存
+  color         String?
+  description   String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // リレーション
+  user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  category      ScheduleCategory @relation(fields: [categoryId], references: [id])
+  actualRecords ActualRecord[]
+
+  @@map("schedules")
+}
+
+// タスクモデル
+model Task {
+  id                String      @id @default(cuid())
+  userId            String
+  title             String
+  description       String?
+  estimatedDuration Int         // minutes
+  priority          String       @default("MEDIUM")
+  deadline          DateTime?
+  categoryId        String
+  status            String       @default("PENDING")
+  createdAt         DateTime     @default(now())
+  updatedAt         DateTime     @updatedAt
+
+  // リレーション
+  user     User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  category ScheduleCategory @relation(fields: [categoryId], references: [id])
+
+  @@map("tasks")
+}
+
+// 実績記録モデル
+model ActualRecord {
+  id                String   @id @default(cuid())
+  scheduleId        String
+  actualStartTime   String   // HH:mm format
+  actualEndTime     String   // HH:mm format
+  notes             String?
+  satisfactionRating Int? // 1-5
+  createdAt         DateTime @default(now())
+
+  // リレーション
+  schedule Schedule @relation(fields: [scheduleId], references: [id], onDelete: Cascade)
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId   String
+
+  @@map("actual_records")
+}
+
+// SQLiteでは文字列として保存
+// TaskPriority: "LOW" | "MEDIUM" | "HIGH"
+// TaskStatus: "PENDING" | "IN_PROGRESS" | "COMPLETED" | "CANCELLED"
